@@ -1,0 +1,13 @@
+# environment and caches
+eeg_env/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# raw data (too large; download from RepOD, see README)
+dataset/
+
+# generated files
+outputs/*.pkl
+outputs/tuning/
+.DS_Store
