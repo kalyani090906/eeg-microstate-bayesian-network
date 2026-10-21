@@ -1,0 +1,16 @@
+state0_duration
+state0_occurrence
+state1_duration
+state1_occurrence
+state2_duration
+state2_occurrence
+state3_duration
+state3_occurrence
+trans_0to1
+trans_0to2
+trans_1to0
+trans_1to2
+trans_2to0
+trans_2to1
+trans_3to0
+trans_3to1

@@ -11,3 +11,6 @@ dataset/
 outputs/*.pkl
 outputs/tuning/
 .DS_Store
+
+# personal archive (old scripts, full-length tables, tuning rounds)
+ml project dump/
