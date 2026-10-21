@@ -1,4 +1,4 @@
-@'
+
 # Bayesian network modeling of EEG microstate transitions (schizophrenia)
 
 ML course project. Pipeline: EEG (RepOD dataset) -> shared microstate model
