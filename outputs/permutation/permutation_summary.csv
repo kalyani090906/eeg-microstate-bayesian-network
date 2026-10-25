@@ -1,0 +1,7 @@
+table,candidate,n_permutations,real_accuracy,real_balanced_accuracy,real_auc,null_mean,null_95th_percentile,p_value,p_family
+with s14,Logistic regression,1000,0.6786,0.6786,0.7092,0.4601,0.6786,0.0609,0.1349
+with s14,L1 selection + logistic regression,1000,0.7857,0.7857,0.7959,0.4466,0.6786,0.009,0.028
+with s14,AdaBoost,1000,0.7857,0.7857,0.7806,0.4803,0.6786,0.021,0.028
+without s14,Logistic regression,1000,0.5926,0.5907,0.6758,0.4637,0.6648,0.1938,0.3976
+without s14,L1 selection + logistic regression,1000,0.8148,0.8104,0.7857,0.4466,0.6648,0.003,0.011
+without s14,AdaBoost,1000,0.7037,0.7005,0.7143,0.4796,0.7033,0.0609,0.0869
