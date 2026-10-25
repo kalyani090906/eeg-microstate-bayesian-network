@@ -29,7 +29,8 @@ Output: outputs/epochs_15min.npz  with
    sfreq      sampling rate of X
 This file is large (about 450 MB at 250 Hz): share it through a drive. It is NOT for git.
 
-Run:  python make_epoch_array.py
+Run:  python make_epoch_array.py                    (2-20 Hz, 250 Hz -> epochs_15min.npz)
+      python make_epoch_array.py --preset labram    (LaBraM input -> epochs_15min_labram.npz)
 """
 import os
 import numpy as np
@@ -51,7 +52,24 @@ REJECT_Z = 3.5
 # these you may change for the pretrained model
 OUT_BAND = (2, 20)             # band of the saved epochs; None = no extra filtering
 OUT_SFREQ = None               # e.g. 200 to resample; None = keep 250 Hz
+OUT_NOTCH = None               # e.g. 50 to remove mains hum (Poland: 50 Hz); None = no notch
+
+# PRESETS: run "python make_epoch_array.py --preset labram" to use these instead
+PRESETS = {
+    # LaBraM was pretrained on 0.1-75 Hz, 50 Hz notch, 200 Hz (Jiang et al., ICLR 2024)
+    "labram": {"OUT_BAND": (0.1, 75), "OUT_SFREQ": 200, "OUT_NOTCH": 50,
+               "OUT_FILE": "epochs_15min_labram.npz"},
+}
 # --------------------------------------------------------------
+
+import argparse
+_parser = argparse.ArgumentParser()
+_parser.add_argument("--preset", choices=sorted(PRESETS), help="use a model's preset settings")
+_args = _parser.parse_args()
+if _args.preset:
+    globals().update(PRESETS[_args.preset])
+    print(f"Preset '{_args.preset}': band {OUT_BAND} Hz, notch {OUT_NOTCH}, "
+          f"{OUT_SFREQ} Hz -> outputs/{OUT_FILE}")
 
 RENAME = {"T3": "T7", "T4": "T8", "T5": "P7", "T6": "P8"}
 BADS = {"s07.edf": ["C4"], "h14.edf": ["F7"], "s11.edf": ["F7"], "s12.edf": ["P7"]}
@@ -68,8 +86,10 @@ def load_clean(path, fname):
     return raw
 
 
-def band(raw, lo_hi):
+def band(raw, lo_hi, notch=None):
     out = raw.copy()
+    if notch is not None:
+        out.notch_filter(notch, verbose="ERROR")
     if lo_hi is not None:
         out.filter(lo_hi[0], lo_hi[1], verbose="ERROR")
     out.set_eeg_reference("average", verbose="ERROR")
@@ -98,7 +118,7 @@ for f in files:
     keep_idx = np.where(np.abs(z) <= REJECT_Z)[0]
 
     # 2) the epochs to save: same boundaries, possibly another band / sampling rate
-    out = band(base, OUT_BAND)
+    out = band(base, OUT_BAND, OUT_NOTCH)
     ep_out = mne.make_fixed_length_epochs(out, duration=EPOCH_SEC, preload=True, verbose="ERROR")
     if MAX_EPOCHS:
         ep_out = ep_out[:MAX_EPOCHS]

@@ -1,0 +1,13 @@
+table,level,model,n_subjects,accuracy,ci_low,ci_high,balanced_accuracy,precision,recall,f1,auc,seconds
+with s14,epoch level,Logistic regression,28,0.75,0.5664,0.8732,0.75,0.7333,0.7857,0.7586,0.8929,2.69
+with s14,epoch level,Random forest,28,0.7143,0.5294,0.8475,0.7143,0.6875,0.7857,0.7333,0.7398,33.5867
+with s14,subject mean,Logistic regression,28,0.75,0.5664,0.8732,0.75,0.7692,0.7143,0.7407,0.801,0.3553
+with s14,subject mean,SVM (linear),28,0.75,0.5664,0.8732,0.75,0.8182,0.6429,0.72,0.7449,0.4856
+with s14,subject mean,kNN (k=5),28,0.6786,0.4934,0.8207,0.6786,0.6667,0.7143,0.6897,0.6658,4.1748
+with s14,subject mean,Random forest,28,0.6786,0.4934,0.8207,0.6786,0.6471,0.7857,0.7097,0.7474,8.1303
+without s14,epoch level,Logistic regression,27,0.7407,0.5532,0.8683,0.7418,0.7143,0.7692,0.7407,0.8736,2.4669
+without s14,epoch level,Random forest,27,0.7407,0.5532,0.8683,0.7418,0.7143,0.7692,0.7407,0.7363,31.1621
+without s14,subject mean,Logistic regression,27,0.7407,0.5532,0.8683,0.739,0.75,0.6923,0.72,0.7527,0.3208
+without s14,subject mean,SVM (linear),27,0.7407,0.5532,0.8683,0.7363,0.8,0.6154,0.6957,0.7308,0.5227
+without s14,subject mean,kNN (k=5),27,0.7037,0.5152,0.8415,0.706,0.6667,0.7692,0.7143,0.7198,0.6922
+without s14,subject mean,Random forest,27,0.6296,0.4423,0.7847,0.6291,0.6154,0.6154,0.6154,0.7143,7.5845
