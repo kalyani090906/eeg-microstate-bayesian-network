@@ -1,0 +1,55 @@
+cluster,table,method,k,healthy,schizophrenia
+0,with s14,k-means,2,6,9
+1,with s14,k-means,2,8,5
+0,with s14,k-means,3,3,8
+1,with s14,k-means,3,7,3
+2,with s14,k-means,3,4,3
+0,with s14,k-means,4,3,8
+1,with s14,k-means,4,3,1
+2,with s14,k-means,4,4,2
+3,with s14,k-means,4,4,3
+0,with s14,Ward hierarchical,2,7,10
+1,with s14,Ward hierarchical,2,7,4
+0,with s14,Ward hierarchical,3,7,4
+1,with s14,Ward hierarchical,3,4,7
+2,with s14,Ward hierarchical,3,3,3
+0,with s14,Ward hierarchical,4,4,7
+1,with s14,Ward hierarchical,4,5,3
+2,with s14,Ward hierarchical,4,3,3
+3,with s14,Ward hierarchical,4,2,1
+0,with s14,Gaussian mixture,2,7,11
+1,with s14,Gaussian mixture,2,7,3
+0,with s14,Gaussian mixture,3,0,1
+1,with s14,Gaussian mixture,3,7,11
+2,with s14,Gaussian mixture,3,7,2
+0,with s14,Gaussian mixture,4,3,8
+1,with s14,Gaussian mixture,4,3,1
+2,with s14,Gaussian mixture,4,4,2
+3,with s14,Gaussian mixture,4,4,3
+0,without s14,k-means,2,6,8
+1,without s14,k-means,2,8,5
+0,without s14,k-means,3,7,3
+1,without s14,k-means,3,3,7
+2,without s14,k-means,3,4,3
+0,without s14,k-means,4,4,2
+1,without s14,k-means,4,3,7
+2,without s14,k-means,4,4,3
+3,without s14,k-means,4,3,1
+0,without s14,Ward hierarchical,2,7,9
+1,without s14,Ward hierarchical,2,7,4
+0,without s14,Ward hierarchical,3,7,4
+1,without s14,Ward hierarchical,3,4,6
+2,without s14,Ward hierarchical,3,3,3
+0,without s14,Ward hierarchical,4,4,6
+1,without s14,Ward hierarchical,4,5,3
+2,without s14,Ward hierarchical,4,3,3
+3,without s14,Ward hierarchical,4,2,1
+0,without s14,Gaussian mixture,2,7,10
+1,without s14,Gaussian mixture,2,7,3
+0,without s14,Gaussian mixture,3,4,3
+1,without s14,Gaussian mixture,3,7,5
+2,without s14,Gaussian mixture,3,3,5
+0,without s14,Gaussian mixture,4,2,4
+1,without s14,Gaussian mixture,4,7,3
+2,without s14,Gaussian mixture,4,4,2
+3,without s14,Gaussian mixture,4,1,4

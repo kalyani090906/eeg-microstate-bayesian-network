@@ -1,0 +1,25 @@
+table,classifier,feature_set,n_subjects,accuracy,ci_low,ci_high,balanced_accuracy,precision,recall,f1,auc,seconds
+with s14,Logistic regression,all 24,28,0.6429,0.4583,0.7929,0.6429,0.6429,0.6429,0.6429,0.6939,0.2272
+with s14,Logistic regression,16 (structure-based),28,0.6786,0.4934,0.8207,0.6786,0.6667,0.7143,0.6897,0.7092,0.1661
+with s14,Logistic regression,"top-4 of 16 (ANOVA, in fold)",28,0.7143,0.5294,0.8475,0.7143,0.7143,0.7143,0.7143,0.7704,0.1571
+with s14,Logistic regression,"top-8 of 16 (ANOVA, in fold)",28,0.6786,0.4934,0.8207,0.6786,0.6667,0.7143,0.6897,0.7194,0.2012
+with s14,Logistic regression,"top-12 of 16 (ANOVA, in fold)",28,0.6429,0.4583,0.7929,0.6429,0.6429,0.6429,0.6429,0.6735,0.1902
+with s14,Logistic regression,L1 selection of 16 (in fold),28,0.7857,0.6046,0.8979,0.7857,0.8333,0.7143,0.7692,0.7959,0.1511
+with s14,AdaBoost,all 24,28,0.6429,0.4583,0.7929,0.6429,0.6429,0.6429,0.6429,0.5663,3.0785
+with s14,AdaBoost,16 (structure-based),28,0.7857,0.6046,0.8979,0.7857,0.7857,0.7857,0.7857,0.7806,3.2164
+with s14,AdaBoost,"top-4 of 16 (ANOVA, in fold)",28,0.6786,0.4934,0.8207,0.6786,0.6667,0.7143,0.6897,0.7347,3.056
+with s14,AdaBoost,"top-8 of 16 (ANOVA, in fold)",28,0.75,0.5664,0.8732,0.75,0.7692,0.7143,0.7407,0.6735,3.0067
+with s14,AdaBoost,"top-12 of 16 (ANOVA, in fold)",28,0.7857,0.6046,0.8979,0.7857,0.8333,0.7143,0.7692,0.7959,3.0371
+with s14,AdaBoost,L1 selection of 16 (in fold),28,0.6786,0.4934,0.8207,0.6786,0.6923,0.6429,0.6667,0.7245,2.9626
+without s14,Logistic regression,all 24,27,0.5926,0.4073,0.7549,0.5907,0.5833,0.5385,0.56,0.6923,0.1748
+without s14,Logistic regression,16 (structure-based),27,0.5926,0.4073,0.7549,0.5907,0.5833,0.5385,0.56,0.6758,0.1569
+without s14,Logistic regression,"top-4 of 16 (ANOVA, in fold)",27,0.7037,0.5152,0.8415,0.7033,0.6923,0.6923,0.6923,0.7527,0.1413
+without s14,Logistic regression,"top-8 of 16 (ANOVA, in fold)",27,0.6667,0.4782,0.8136,0.6676,0.6429,0.6923,0.6667,0.6593,0.1653
+without s14,Logistic regression,"top-12 of 16 (ANOVA, in fold)",27,0.6296,0.4423,0.7847,0.6291,0.6154,0.6154,0.6154,0.6648,0.1953
+without s14,Logistic regression,L1 selection of 16 (in fold),27,0.8148,0.633,0.9182,0.8104,0.9,0.6923,0.7826,0.7857,0.1462
+without s14,AdaBoost,all 24,27,0.5556,0.3731,0.7241,0.5549,0.5385,0.5385,0.5385,0.544,2.9846
+without s14,AdaBoost,16 (structure-based),27,0.7037,0.5152,0.8415,0.7005,0.7273,0.6154,0.6667,0.7143,3.8635
+without s14,AdaBoost,"top-4 of 16 (ANOVA, in fold)",27,0.6296,0.4423,0.7847,0.6346,0.5882,0.7692,0.6667,0.7582,4.4459
+without s14,AdaBoost,"top-8 of 16 (ANOVA, in fold)",27,0.7037,0.5152,0.8415,0.7033,0.6923,0.6923,0.6923,0.7198,4.3334
+without s14,AdaBoost,"top-12 of 16 (ANOVA, in fold)",27,0.7778,0.5924,0.8939,0.7747,0.8182,0.6923,0.75,0.7857,4.3684
+without s14,AdaBoost,L1 selection of 16 (in fold),27,0.6667,0.4782,0.8136,0.6648,0.6667,0.6154,0.64,0.6978,4.3323

@@ -1,0 +1,13 @@
+table,evaluation,version,accuracy,precision,recall,f1,avg_time_s
+with s14,70/30 split,Own kNN (Lab 5),0.55556,0.5,0.75,0.6,0.00053
+with s14,leave-one-subject-out,Own kNN (Lab 5),0.64286,0.64286,0.64286,0.64286,
+with s14,70/30 split,sklearn kNN,0.55556,0.5,0.75,0.6,0.15949
+with s14,leave-one-subject-out,sklearn kNN,0.64286,0.64286,0.64286,0.64286,
+with s14,70/30 split,AI-generated kNN (Lab 6 A1),0.55556,0.5,0.75,0.6,0.00084
+with s14,leave-one-subject-out,AI-generated kNN (Lab 6 A1),0.64286,0.64286,0.64286,0.64286,
+without s14,70/30 split,Own kNN (Lab 5),0.55556,0.5,0.5,0.5,0.00059
+without s14,leave-one-subject-out,Own kNN (Lab 5),0.62963,0.61538,0.61538,0.61538,
+without s14,70/30 split,sklearn kNN,0.55556,0.5,0.5,0.5,0.00809
+without s14,leave-one-subject-out,sklearn kNN,0.62963,0.61538,0.61538,0.61538,
+without s14,70/30 split,AI-generated kNN (Lab 6 A1),0.55556,0.5,0.5,0.5,0.00068
+without s14,leave-one-subject-out,AI-generated kNN (Lab 6 A1),0.62963,0.61538,0.61538,0.61538,

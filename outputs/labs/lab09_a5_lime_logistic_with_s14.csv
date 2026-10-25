@@ -1,0 +1,17 @@
+,mean_abs_weight,mean_weight,sd_abs_weight
+trans_0to2,0.2205,-0.0033,0.1309
+state3_duration,0.1848,-0.0021,0.1079
+trans_1to2,0.0801,-0.0011,0.0538
+state3_occurrence,0.0795,-0.0033,0.0406
+trans_2to0,0.0648,-0.0052,0.0403
+state1_occurrence,0.0572,0.0044,0.0358
+trans_3to0,0.0523,0.0031,0.0365
+state2_occurrence,0.038,0.0035,0.0244
+state1_duration,0.0374,-0.0013,0.0317
+state2_duration,0.0373,0.0036,0.0256
+state0_duration,0.0271,-0.0018,0.0239
+trans_3to1,0.0197,0.0021,0.0138
+trans_1to0,0.0195,-0.0031,0.0165
+state0_occurrence,0.0189,-0.0003,0.0164
+trans_0to1,0.0168,-0.0008,0.0142
+trans_2to1,0.0134,-0.001,0.0103

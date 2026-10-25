@@ -1,0 +1,13 @@
+table,model,n_subjects,accuracy,ci_low,ci_high,balanced_accuracy,precision,recall,f1,auc,seconds
+with s14,soft voting (reference),28,0.679,0.493,0.821,0.679,0.692,0.643,0.667,0.679,8.432
+with s14,stack + logistic regression,28,0.321,0.179,0.507,0.321,0.353,0.429,0.387,0.189,41.035
+with s14,stack + random forest,28,0.571,0.391,0.735,0.571,0.571,0.571,0.571,0.587,60.895
+with s14,stack + SVM,28,0.0,0.0,0.121,0.0,0.0,0.0,0.0,0.0,49.608
+with s14,stack + kNN,28,0.536,0.358,0.705,0.536,0.529,0.643,0.581,0.533,51.564
+with s14,"stack + ridge, positive weights",28,0.607,0.424,0.764,0.607,0.6,0.643,0.621,0.607,49.63
+without s14,soft voting (reference),27,0.556,0.373,0.724,0.555,0.538,0.538,0.538,0.621,7.013
+without s14,stack + logistic regression,27,0.148,0.059,0.325,0.143,0.0,0.0,0.0,0.0,42.375
+without s14,stack + random forest,27,0.556,0.373,0.724,0.549,0.556,0.385,0.455,0.467,49.734
+without s14,stack + SVM,27,0.148,0.059,0.325,0.143,0.0,0.0,0.0,0.143,37.678
+without s14,stack + kNN,27,0.519,0.34,0.693,0.519,0.5,0.538,0.519,0.475,35.993
+without s14,"stack + ridge, positive weights",27,0.481,0.307,0.66,0.481,0.462,0.462,0.462,0.481,37.87

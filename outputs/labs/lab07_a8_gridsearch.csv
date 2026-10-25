@@ -1,0 +1,7 @@
+table,model,n_subjects,accuracy,ci_low,ci_high,balanced_accuracy,precision,recall,f1,auc,seconds
+with s14,"tree, default settings",28,0.464,0.295,0.642,0.464,0.462,0.429,0.444,0.464,0.125
+with s14,"tree, depth 3 (entropy)",28,0.393,0.236,0.576,0.393,0.385,0.357,0.37,0.434,0.08
+with s14,"tree, GridSearchCV (nested)",28,0.393,0.236,0.576,0.393,0.412,0.5,0.452,0.426,15.258
+without s14,"tree, default settings",27,0.37,0.215,0.558,0.371,0.357,0.385,0.37,0.371,0.092
+without s14,"tree, depth 3 (entropy)",27,0.481,0.307,0.66,0.478,0.455,0.385,0.417,0.47,0.098
+without s14,"tree, GridSearchCV (nested)",27,0.407,0.245,0.593,0.404,0.364,0.308,0.333,0.36,5.008

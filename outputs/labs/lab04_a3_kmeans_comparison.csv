@@ -1,0 +1,4 @@
+version,avg_time_s,sse,ARI_vs_own,ARI_vs_diagnosis,cluster_sizes
+Own k-means (Lab 3),0.00073,277.2827,1.0,0.09559,"[11, 17]"
+AI k-means (Lab 4),0.00117,272.71262,0.60324,-0.01647,"[12, 16]"
+sklearn KMeans,0.21554,272.71262,0.60324,-0.01647,"[12, 16]"

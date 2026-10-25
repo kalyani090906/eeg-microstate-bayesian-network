@@ -1,0 +1,5 @@
+table,model,loso_accuracy
+with s14,own tree,0.3214
+with s14,sklearn tree,0.4286
+without s14,own tree,0.2963
+without s14,sklearn tree,0.4815

@@ -1,0 +1,91 @@
+table,k,model,train_acc,test_acc,loso_acc
+with s14,1,sklearn kNN,1.0,0.667,0.643
+with s14,1,own kNN,1.0,0.667,0.643
+with s14,1,own weighted kNN,1.0,0.667,0.643
+with s14,2,sklearn kNN,0.737,0.667,0.679
+with s14,2,own kNN,1.0,0.667,0.643
+with s14,2,own weighted kNN,1.0,0.667,0.643
+with s14,3,sklearn kNN,0.737,0.556,0.643
+with s14,3,own kNN,0.737,0.556,0.643
+with s14,3,own weighted kNN,1.0,0.556,0.643
+with s14,4,sklearn kNN,0.737,0.333,0.571
+with s14,4,own kNN,0.789,0.444,0.643
+with s14,4,own weighted kNN,1.0,0.444,0.643
+with s14,5,sklearn kNN,0.789,0.222,0.643
+with s14,5,own kNN,0.789,0.222,0.643
+with s14,5,own weighted kNN,1.0,0.222,0.643
+with s14,6,sklearn kNN,0.789,0.222,0.714
+with s14,6,own kNN,0.789,0.444,0.714
+with s14,6,own weighted kNN,1.0,0.444,0.714
+with s14,7,sklearn kNN,0.789,0.333,0.643
+with s14,7,own kNN,0.789,0.333,0.643
+with s14,7,own weighted kNN,1.0,0.333,0.679
+with s14,8,sklearn kNN,0.789,0.222,0.607
+with s14,8,own kNN,0.789,0.444,0.643
+with s14,8,own weighted kNN,1.0,0.444,0.643
+with s14,9,sklearn kNN,0.789,0.444,0.607
+with s14,9,own kNN,0.789,0.444,0.607
+with s14,9,own weighted kNN,1.0,0.444,0.679
+with s14,10,sklearn kNN,0.789,0.444,0.536
+with s14,10,own kNN,0.789,0.444,0.607
+with s14,10,own weighted kNN,1.0,0.444,0.643
+with s14,11,sklearn kNN,0.789,0.444,0.571
+with s14,11,own kNN,0.789,0.444,0.571
+with s14,11,own weighted kNN,1.0,0.444,0.536
+with s14,12,sklearn kNN,0.789,0.444,0.571
+with s14,12,own kNN,0.789,0.444,0.607
+with s14,12,own weighted kNN,1.0,0.444,0.643
+with s14,13,sklearn kNN,0.737,0.444,0.536
+with s14,13,own kNN,0.737,0.444,0.536
+with s14,13,own weighted kNN,1.0,0.444,0.607
+with s14,14,sklearn kNN,0.789,0.333,0.571
+with s14,14,own kNN,0.842,0.444,0.607
+with s14,14,own weighted kNN,1.0,0.444,0.643
+with s14,15,sklearn kNN,0.737,0.333,0.5
+with s14,15,own kNN,0.737,0.333,0.5
+with s14,15,own weighted kNN,1.0,0.444,0.5
+without s14,1,sklearn kNN,1.0,0.667,0.63
+without s14,1,own kNN,1.0,0.667,0.63
+without s14,1,own weighted kNN,1.0,0.667,0.63
+without s14,2,sklearn kNN,0.833,0.667,0.63
+without s14,2,own kNN,1.0,0.667,0.63
+without s14,2,own weighted kNN,1.0,0.667,0.63
+without s14,3,sklearn kNN,0.833,0.556,0.63
+without s14,3,own kNN,0.833,0.556,0.63
+without s14,3,own weighted kNN,1.0,0.556,0.63
+without s14,4,sklearn kNN,0.778,0.667,0.556
+without s14,4,own kNN,0.889,0.667,0.63
+without s14,4,own weighted kNN,1.0,0.667,0.63
+without s14,5,sklearn kNN,0.778,0.333,0.63
+without s14,5,own kNN,0.778,0.333,0.63
+without s14,5,own weighted kNN,1.0,0.444,0.63
+without s14,6,sklearn kNN,0.778,0.333,0.741
+without s14,6,own kNN,0.778,0.333,0.704
+without s14,6,own weighted kNN,1.0,0.333,0.704
+without s14,7,sklearn kNN,0.778,0.333,0.63
+without s14,7,own kNN,0.778,0.333,0.63
+without s14,7,own weighted kNN,1.0,0.333,0.63
+without s14,8,sklearn kNN,0.778,0.444,0.556
+without s14,8,own kNN,0.778,0.444,0.63
+without s14,8,own weighted kNN,1.0,0.333,0.63
+without s14,9,sklearn kNN,0.778,0.444,0.519
+without s14,9,own kNN,0.778,0.444,0.519
+without s14,9,own weighted kNN,1.0,0.444,0.63
+without s14,10,sklearn kNN,0.778,0.333,0.519
+without s14,10,own kNN,0.778,0.444,0.593
+without s14,10,own weighted kNN,1.0,0.333,0.63
+without s14,11,sklearn kNN,0.778,0.444,0.519
+without s14,11,own kNN,0.778,0.444,0.519
+without s14,11,own weighted kNN,1.0,0.444,0.519
+without s14,12,sklearn kNN,0.833,0.556,0.481
+without s14,12,own kNN,0.833,0.444,0.593
+without s14,12,own weighted kNN,1.0,0.444,0.593
+without s14,13,sklearn kNN,0.778,0.444,0.556
+without s14,13,own kNN,0.778,0.444,0.556
+without s14,13,own weighted kNN,1.0,0.444,0.63
+without s14,14,sklearn kNN,0.778,0.333,0.556
+without s14,14,own kNN,0.889,0.444,0.556
+without s14,14,own weighted kNN,1.0,0.444,0.593
+without s14,15,sklearn kNN,0.778,0.333,0.519
+without s14,15,own kNN,0.778,0.333,0.519
+without s14,15,own weighted kNN,1.0,0.333,0.481
