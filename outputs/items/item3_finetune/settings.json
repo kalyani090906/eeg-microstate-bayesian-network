@@ -1,0 +1,13 @@
+{
+  "N_FOLDS": 7,
+  "TRAINABLE_BLOCKS": 2,
+  "PASSES": 5,
+  "BATCH": 32,
+  "LR_BACKBONE": 0.0001,
+  "LR_HEAD": 0.001,
+  "WEIGHT_DECAY": 0.05,
+  "DROPOUT": 0.5,
+  "SEED": 42,
+  "MODEL_SFREQ": 200,
+  "UNIT_SCALE": 10000.0
+}

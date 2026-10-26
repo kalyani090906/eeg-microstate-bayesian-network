@@ -1,0 +1,3 @@
+table,protocol,folds_done,n_subjects,n_correct,accuracy,ci_low,ci_high,balanced_accuracy,auc
+with s14,7-fold subject-grouped,7,28,20,0.7143,0.5294,0.8475,0.7143,0.8214
+without s14,7-fold subject-grouped,7,27,21,0.7778,0.5924,0.8939,0.7802,0.7802
