@@ -11,7 +11,7 @@ With 28 subjects every result is exploratory; one subject is about 3.6 percentag
 | 3 | Fine-tuned LaBraM (7-fold subject-grouped, a different protocol) | `item3_finetune/` | `scripts/item3_finetune.py` |
 | 4 | Feature reduction: 24 vs 16 vs top-k vs L1 | `item4_feature_reduction.csv`, `item4_top4_selection_counts.csv` | `scripts/item4_feature_reduction.py` |
 | 5 | Pipeline (scale, select top-k, classify) + LIME | `item5_pipeline.csv`, `item5_lime_*.png` / `.csv` | `labs/lab09_a4_pipeline.py`, `labs/lab09_a5_lime.py` (copied by `scripts/collect_items.py`) |
-| 6 | Comparison with published results | (to do) | |
+| 6 | Comparison with published results on the same dataset, + what to copy / do differently | `item6_comparison.md` (read this), `item6_comparison.csv` | `scripts/item6_comparison.py` |
 | 7 | Clustering vs diagnosis | `item7_clustering.csv`, `item7_contingency_tables.csv`, `item7_kmeans_pca.png` | `scripts/item7_clustering.py` |
 
 Related: the permutation test (is a result better than chance?) is in `outputs/permutation/`.
