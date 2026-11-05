@@ -156,14 +156,20 @@ if __name__ == "__main__":
         d = load_table(path)
         Xd, yd = d[features], d["label"].tolist()
         own_pred, sk_pred = [], []
+        own_train, sk_train = [], []          # training accuracy of each fold (shows overfitting)
         for i in range(len(d)):
             train = [j for j in range(len(d)) if j != i]
-            t = build_tree(Xd.iloc[train], [yd[j] for j in train], max_depth=3)
+            y_train = np.array([yd[j] for j in train])
+            t = build_tree(Xd.iloc[train], list(y_train), max_depth=3)
             own_pred.append(predict(t, Xd.iloc[[i]])[0])
+            own_train.append(np.mean(np.array(predict(t, Xd.iloc[train])) == y_train))
             sk = DecisionTreeClassifier(criterion="entropy", max_depth=3, random_state=SEED)
-            sk_pred.append(sk.fit(Xd.iloc[train], [yd[j] for j in train]).predict(Xd.iloc[[i]])[0])
-        for name, pred in [("own tree", own_pred), ("sklearn tree", sk_pred)]:
+            sk.fit(Xd.iloc[train], y_train)
+            sk_pred.append(sk.predict(Xd.iloc[[i]])[0])
+            sk_train.append(np.mean(sk.predict(Xd.iloc[train]) == y_train))
+        for name, pred, tr in [("own tree", own_pred, own_train), ("sklearn tree", sk_pred, sk_train)]:
             rows.append({"table": table_name, "model": name,
+                         "train_accuracy": float(np.mean(tr)),
                          "loso_accuracy": float(np.mean(np.array(pred) == np.array(yd)))})
     res = pd.DataFrame(rows)
     print("\nLeave-one-subject-out accuracy (depth 3):")

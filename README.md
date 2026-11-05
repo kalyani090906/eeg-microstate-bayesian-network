@@ -130,6 +130,9 @@ Lab 8 A1–A11 (logic gates, customer table) are separate submissions and are no
    are fitted inside each training fold, never on all subjects first.
 3. **Leave-one-subject-out** (28 folds) unless stated otherwise. Epoch predictions are averaged
    into one prediction per subject, and epoch-level accuracy is never reported.
+   The result is always the **test** accuracy. Result tables also give `train_accuracy` (the same
+   model scored on its own training subjects, averaged over the folds) and `overfit_gap`
+   (train minus test). These only show how much a model overfits; they are never the result.
 4. **Report every result twice:** with s14 (main) and without s14 (see below).
 5. **No augmentation, no overlapping windows.**
 6. Feature names come from `outputs/features_final_16_list.txt`. The epoch table has extra

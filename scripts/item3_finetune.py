@@ -101,13 +101,18 @@ def train_and_predict(X, y, train_idx, test_idx, ch_names, fold_seed, passes):
         losses.append(total / len(order))
         print(f"    pass {p + 1}/{passes}: training loss {losses[-1]:.4f}", flush=True)
 
-    # Step 4: predict every epoch of the test subjects
+    # Step 4: predict every epoch of the test subjects, and (to show overfitting) of the
+    # training subjects too, with the same finished model
     model.eval()
-    probs = []
-    with torch.no_grad():
-        for i in range(0, len(test_idx), 64):
-            probs.append(torch.sigmoid(model(torch.from_numpy(X[test_idx[i:i + 64]]))).numpy())
-    return np.concatenate(probs), losses
+
+    def predict(idx):
+        probs = []
+        with torch.no_grad():
+            for i in range(0, len(idx), 64):
+                probs.append(torch.sigmoid(model(torch.from_numpy(X[idx[i:i + 64]]))).numpy())
+        return np.concatenate(probs)
+
+    return predict(test_idx), predict(train_idx), losses
 
 
 def run_table(table_name, X, y, subjects, ch_names, args):
@@ -115,6 +120,12 @@ def run_table(table_name, X, y, subjects, ch_names, args):
     idx_all = np.where(keep)[0]
     out_file = RESULTS_DIR / f"subject_predictions_{table_name.replace(' ', '_')}.csv"
     done = pd.read_csv(out_file) if out_file.exists() else pd.DataFrame(columns=["fold"])
+    if len(done) and "fold_train_accuracy" not in done.columns and not args.smoke:
+        # saved before training accuracy was added: keep that file as an old version, start again
+        old = out_file.with_name(out_file.stem + "_old_no_train_acc.csv")
+        out_file.replace(old)
+        print(f"  {out_file.name} has no training accuracy: kept as {old.name}, folds re-run")
+        done = pd.DataFrame(columns=["fold"])
 
     # Step 2: 7 subject-grouped folds, stratified by diagnosis (fixed by SEED)
     sgkf = StratifiedGroupKFold(n_splits=N_FOLDS, shuffle=True, random_state=SEED)
@@ -122,7 +133,7 @@ def run_table(table_name, X, y, subjects, ch_names, args):
     print(f"\n=== {table_name}: {len(np.unique(subjects[idx_all]))} subjects, {len(idx_all)} epochs, "
           f"{N_FOLDS} folds ===")
     for f, (tr, te) in enumerate(folds):
-        if f in set(done["fold"]):
+        if f in set(done["fold"]) and not args.smoke:      # the smoke test always runs (saves nothing)
             print(f"  fold {f + 1}: already saved, skipped")
             continue
         if args.smoke and f > 0:
@@ -134,8 +145,8 @@ def run_table(table_name, X, y, subjects, ch_names, args):
         print(f"  fold {f + 1}/{N_FOLDS}: test subjects {test_subjects}, "
               f"{len(train_idx)} training epochs", flush=True)
         start = time.perf_counter()
-        probs, losses = train_and_predict(X, y, train_idx, test_idx, ch_names, SEED + f,
-                                          1 if args.smoke else PASSES)
+        probs, train_probs, losses = train_and_predict(X, y, train_idx, test_idx, ch_names, SEED + f,
+                                                       1 if args.smoke else PASSES)
 
         # Step 5: average each test subject's epoch probabilities into one prediction
         per_epoch = pd.DataFrame({"subject": subjects[test_idx], "label": y[test_idx], "prob": probs})
@@ -143,6 +154,15 @@ def run_table(table_name, X, y, subjects, ch_names, args):
         per_subject["predicted"] = (per_subject["prob"] >= 0.5).astype(int)
         per_subject["fold"] = f
         per_subject["final_train_loss"] = losses[-1]
+
+        # Step 5b: the same per-subject averaging on the training subjects -> training accuracy
+        train_epoch = pd.DataFrame({"subject": subjects[train_idx], "label": y[train_idx],
+                                    "prob": train_probs})
+        train_subj = train_epoch.groupby(["subject", "label"], as_index=False)["prob"].mean()
+        per_subject["fold_train_accuracy"] = float(
+            ((train_subj["prob"] >= 0.5).astype(int) == train_subj["label"]).mean())
+        print(f"    training accuracy this fold: {per_subject['fold_train_accuracy'].iloc[0]:.1%}",
+              flush=True)
         if not args.smoke:
             per_subject.to_csv(out_file, mode="a", header=not out_file.exists(), index=False)
         print(f"    {per_subject[['subject', 'label', 'prob']].round(3).values.tolist()}  "
@@ -158,7 +178,9 @@ def run_table(table_name, X, y, subjects, ch_names, args):
     return {"table": table_name, "protocol": f"{N_FOLDS}-fold subject-grouped",
             "folds_done": res["fold"].nunique(), "n_subjects": n, "n_correct": k,
             "accuracy": k / n, "ci_low": lo, "ci_high": hi, "balanced_accuracy": bal,
-            "auc": roc_auc_score(res["label"], res["prob"])}
+            "auc": roc_auc_score(res["label"], res["prob"]),
+            # average over the folds of the training-subject accuracy (shows overfitting only)
+            "train_accuracy": res.groupby("fold")["fold_train_accuracy"].first().mean()}
 
 
 if __name__ == "__main__":
@@ -182,6 +204,7 @@ if __name__ == "__main__":
                         for t in ["with s14", "without s14"]) if r]
     if rows:
         summary = pd.DataFrame(rows)
+        summary["overfit_gap"] = summary["train_accuracy"] - summary["accuracy"]   # train minus test
         summary.round(4).to_csv(RESULTS_DIR / "item3_summary.csv", index=False)
         print("\n" + summary.round(3).to_string(index=False))
         print(f"\nSaved in {RESULTS_DIR}")

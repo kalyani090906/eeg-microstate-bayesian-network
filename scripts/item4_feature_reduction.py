@@ -100,7 +100,8 @@ if __name__ == "__main__":
                        **all_metrics(result), "seconds": seconds}
                 rows.append(row)
                 print(f"  {clf_name:20s} {set_name:30s} acc {row['accuracy']:.1%} "
-                      f"[{row['ci_low']:.0%}-{row['ci_high']:.0%}]  AUC {row['auc']:.2f}  ({seconds:.1f}s)")
+                      f"[{row['ci_low']:.0%}-{row['ci_high']:.0%}]  train {row['train_accuracy']:.1%}  "
+                      f"AUC {row['auc']:.2f}  ({seconds:.1f}s)")
 
     res = pd.DataFrame(rows)
     res.round(4).to_csv(RESULTS_DIR / "item4_feature_reduction.csv", index=False)

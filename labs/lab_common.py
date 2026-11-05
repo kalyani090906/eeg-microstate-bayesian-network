@@ -45,6 +45,8 @@ def all_metrics(result):
         "accuracy": result["accuracy"],
         "ci_low": result["ci_low"],
         "ci_high": result["ci_high"],
+        "train_accuracy": result["train_accuracy"],                   # on its own training subjects
+        "overfit_gap": result["train_accuracy"] - result["accuracy"],  # train minus test
         "balanced_accuracy": result["balanced_accuracy"],
         "precision": precision_score(y, pred, zero_division=0),
         "recall": recall_score(y, pred, zero_division=0),
@@ -74,7 +76,7 @@ def run_models(models, scale=True, features=None, tables=TABLES):
             row = {"table": table_name, "model": name, **all_metrics(result), "seconds": seconds}
             rows.append(row)
             print(f"  {name:26s} acc {row['accuracy']:.1%}  "
-                  f"[{row['ci_low']:.0%}-{row['ci_high']:.0%}]  "
+                  f"[{row['ci_low']:.0%}-{row['ci_high']:.0%}]  train {row['train_accuracy']:.1%}  "
                   f"bal {row['balanced_accuracy']:.1%}  F1 {row['f1']:.2f}  "
                   f"AUC {row['auc']:.2f}  ({seconds:.1f}s)")
     return pd.DataFrame(rows)

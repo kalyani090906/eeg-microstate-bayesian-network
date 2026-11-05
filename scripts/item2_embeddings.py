@@ -140,8 +140,8 @@ def classify():
                        "seconds": time.perf_counter() - start}
                 rows.append(row)
                 print(f"  {level:13s} {name:20s} acc {row['accuracy']:.1%} "
-                      f"[{row['ci_low']:.0%}-{row['ci_high']:.0%}]  AUC {row['auc']:.2f}  "
-                      f"({row['seconds']:.0f}s)")
+                      f"[{row['ci_low']:.0%}-{row['ci_high']:.0%}]  train {row['train_accuracy']:.1%}  "
+                      f"AUC {row['auc']:.2f}  ({row['seconds']:.0f}s)")
     res = pd.DataFrame(rows)
     res.round(4).to_csv(RESULTS_DIR / "item2_embeddings.csv", index=False)
     print(f"\nSaved: {RESULTS_DIR / 'item2_embeddings.csv'}")

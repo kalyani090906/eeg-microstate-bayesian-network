@@ -33,13 +33,16 @@ def scaled(X_train, X_test):
 
 
 def loso_accuracy(make_model, X, y):
-    # leave one subject out: train on the rest, predict the one left out
-    correct = 0
+    # leave one subject out: train on the rest, predict the one left out.
+    # Also returns the training accuracy, averaged over the folds (shows overfitting).
+    correct, train_accs = 0, []
     for i in range(len(X)):
         X_tr, X_te = scaled(X[:i] + X[i + 1:], [X[i]])
-        model = make_model().fit(X_tr, y[:i] + y[i + 1:])
+        y_tr = y[:i] + y[i + 1:]
+        model = make_model().fit(X_tr, y_tr)
         correct += int(list(model.predict(X_te))[0] == y[i])
-    return correct / len(X)
+        train_accs.append(model.score(X_tr, y_tr))
+    return correct / len(X), sum(train_accs) / len(train_accs)
 
 
 if __name__ == "__main__":
@@ -56,11 +59,13 @@ if __name__ == "__main__":
         for k in K_VALUES:
             for name, make in MODELS.items():
                 model = make(k).fit(X_tr, y_tr)
+                loso_acc, loso_train_acc = loso_accuracy(lambda: make(k), X, y)
                 rows.append({
                     "table": table_name, "k": k, "model": name,
                     "train_acc": model.score(X_tr, y_tr),               # step 2: train accuracy
                     "test_acc": model.score(X_te, y_te),                # step 3: test accuracy
-                    "loso_acc": loso_accuracy(lambda: make(k), X, y),   # step 4: leave-one-out
+                    "loso_acc": loso_acc,                               # step 4: leave-one-out
+                    "loso_train_acc": loso_train_acc,                   #   and its training accuracy
                 })
     res = pd.DataFrame(rows)
     res.round(3).to_csv(LAB_OUT / "lab05_a8_a9_k_sweep.csv", index=False)

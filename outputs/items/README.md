@@ -4,6 +4,10 @@ All results use leave-one-subject-out validation (except item 3) and are reporte
 with s14 (28 subjects, main) and without s14 (27 subjects, sensitivity check).
 With 28 subjects every result is exploratory; one subject is about 3.6 percentage points.
 
+`accuracy` is the test accuracy (the result). `train_accuracy` is the same model scored on its own
+training subjects, averaged over the folds, and `overfit_gap` = train minus test. A large gap means
+the model memorised its training subjects; it is shown for that reason only.
+
 | Item | What it is | Files here | Made by |
 |---|---|---|---|
 | 1 | 16 microstate features + 11 ML classifiers | `item1_classifiers.csv` | `labs/lab09_a3_classifiers.py` (copied by `scripts/collect_items.py`) |

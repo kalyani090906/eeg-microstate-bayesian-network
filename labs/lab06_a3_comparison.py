@@ -60,14 +60,22 @@ if __name__ == "__main__":
                 start = time.perf_counter()
                 pred = fit_predict(make, X_tr, y_tr, X_te)
                 times.append(time.perf_counter() - start)
+            train_acc = accuracy_score(y_tr, fit_predict(make, X_tr, y_tr, X_tr))   # shows overfitting
             rows.append({"table": table_name, "evaluation": "70/30 split", "version": name,
-                         **metrics(y_te, pred), "avg_time_s": sum(times) / N_RUNS})
+                         "train_accuracy": train_acc, **metrics(y_te, pred),
+                         "avg_time_s": sum(times) / N_RUNS})
 
-            # Step 2: leave-one-subject-out
-            loso_pred = [fit_predict(make, X[:i] + X[i + 1:], y[:i] + y[i + 1:], [X[i]])[0]
-                         for i in range(len(X))]
-            rows.append({"table": table_name, "evaluation": "leave-one-subject-out",
-                         "version": name, **metrics(y, loso_pred), "avg_time_s": None})
+            # Step 2: leave-one-subject-out (one fit per fold predicts the training part AND the
+            # held-out subject, so the training accuracy comes from the same model)
+            loso_pred, fold_train = [], []
+            for i in range(len(X)):
+                X_rest, y_rest = X[:i] + X[i + 1:], y[:i] + y[i + 1:]
+                p = fit_predict(make, X_rest, y_rest, X_rest + [X[i]])
+                loso_pred.append(p[-1])
+                fold_train.append(accuracy_score(y_rest, p[:-1]))
+            rows.append({"table": table_name, "evaluation": "leave-one-subject-out", "version": name,
+                         "train_accuracy": sum(fold_train) / len(fold_train), **metrics(y, loso_pred),
+                         "avg_time_s": None})
 
     res = pd.DataFrame(rows)
     print(res.round(4).to_string(index=False))

@@ -9,6 +9,8 @@ What it does, in plain words:
     (epoch features, embeddings): rows of one subject always stay together, and
     the epoch probabilities are averaged into one prediction per subject.
   - Reports accuracy, balanced accuracy and a 95% confidence interval.
+  - Also reports training accuracy (the model scored on its own training subjects, averaged
+    over the folds). It shows overfitting only; the result is always the test accuracy.
 
 Run it directly to get the first baseline (logistic regression, with and without s14):
     eeg_env\\Scripts\\python.exe scripts\\evaluate.py
@@ -57,17 +59,28 @@ def wilson_ci(n_correct, n_total, level=0.95):
     return centre - half, centre + half
 
 
-def evaluate(model_factory, df, features, scale=True):
+def subject_probabilities(model, part, features):
+    # Predict every row of `part`, then average the rows of each subject into one probability.
+    # Models without probabilities (e.g. Perceptron) give 0/1 votes, averaged the same way.
+    X = part[features].values
+    p = model.predict_proba(X)[:, 1] if hasattr(model, "predict_proba") else model.predict(X)
+    return pd.Series(p, index=part.index).groupby(part["subject"]).mean()
+
+
+def evaluate(model_factory, df, features, scale=True, train_score=True):
     """
     model_factory: a function with no arguments that returns a NEW untrained model
                    (anything with fit and predict/predict_proba, e.g. lambda: LogisticRegression()).
     df:            table with 'subject', 'label' and the feature columns.
     features:      list of column names to use as inputs.
     scale:         put a StandardScaler in front of the model (fitted on training rows only).
+    train_score:   also score the TRAINING subjects of every fold (train_accuracy). It is only
+                   there to show overfitting (train much higher than test); it is never the result.
     Returns a dict with per-subject predictions and the summary numbers.
     """
     subjects = df["subject"].unique()
     rows = []
+    train_accs = []
 
     for test_subject in subjects:
         # Step 1: split by subject - all rows of the test subject go to the test side
@@ -82,12 +95,14 @@ def evaluate(model_factory, df, features, scale=True):
         # Step 3: train on the other subjects
         model.fit(train[features].values, train["label"].values)
 
-        # Step 4: predict the held-out subject; average over its rows if it has many (epochs).
-        # Models without probabilities (e.g. Perceptron) give 0/1 votes, averaged the same way.
-        if hasattr(model, "predict_proba"):
-            prob_patient = model.predict_proba(test[features].values)[:, 1].mean()
-        else:
-            prob_patient = model.predict(test[features].values).mean()
+        # Step 4: predict the held-out subject; average over its rows if it has many (epochs)
+        prob_patient = subject_probabilities(model, test, features).iloc[0]
+
+        # Step 4b: the same model on its own training subjects (same averaging and 0.5 cut-off)
+        if train_score:
+            train_prob = subject_probabilities(model, train, features)
+            train_true = train.groupby("subject")["label"].first().loc[train_prob.index]
+            train_accs.append(float(((train_prob >= 0.5).astype(int) == train_true).mean()))
         rows.append({
             "subject": test_subject,
             "true_label": int(test["label"].iloc[0]),
@@ -95,7 +110,8 @@ def evaluate(model_factory, df, features, scale=True):
             "predicted": int(prob_patient >= 0.5),
         })
 
-    # Step 5: one row per subject -> accuracy, balanced accuracy, confidence interval
+    # Step 5: one row per subject -> accuracy, balanced accuracy, confidence interval;
+    # training accuracy = the average over the folds (NaN when train_score=False)
     per_subject = pd.DataFrame(rows)
     y_true, y_pred = per_subject["true_label"], per_subject["predicted"]
     n_correct = int((y_true == y_pred).sum())
@@ -108,6 +124,7 @@ def evaluate(model_factory, df, features, scale=True):
         "balanced_accuracy": balanced_accuracy_score(y_true, y_pred),
         "ci_low": ci_low,
         "ci_high": ci_high,
+        "train_accuracy": float(np.mean(train_accs)) if train_accs else float("nan"),
     }
 
 
@@ -129,11 +146,14 @@ if __name__ == "__main__":
         print(f"  accuracy          : {result['accuracy']:.1%}  "
               f"(95% CI {result['ci_low']:.1%} to {result['ci_high']:.1%})")
         print(f"  balanced accuracy : {result['balanced_accuracy']:.1%}")
+        print(f"  training accuracy : {result['train_accuracy']:.1%}  (average over the {result['n_subjects']} folds; "
+              f"only shows overfitting, not a result)")
         wrong = result["per_subject"].query("true_label != predicted")["subject"].tolist()
         print(f"  misclassified     : {', '.join(wrong) if wrong else 'none'}")
         summary.append({"table": name, "model": "logistic regression",
                         **{k: result[k] for k in ["n_subjects", "n_correct", "accuracy",
-                                                  "balanced_accuracy", "ci_low", "ci_high"]}})
+                                                  "balanced_accuracy", "ci_low", "ci_high",
+                                                  "train_accuracy"]}})
 
     pd.DataFrame(summary).to_csv(RESULTS_FILE, index=False)
     print(f"\nSaved: {RESULTS_FILE}")

@@ -161,7 +161,7 @@ def score(name, table, perm_id):
         df["label"] = df["subject"].map(subj_labels).astype(int)
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        r = evaluate(factory, df, cols, scale=scale)
+        r = evaluate(factory, df, cols, scale=scale, train_score=False)   # shuffles need test scores only
     ps = r["per_subject"]
     return {"accuracy": r["accuracy"], "balanced_accuracy": r["balanced_accuracy"],
             "auc": roc_auc_score(ps["true_label"], ps["prob_patient"])}
