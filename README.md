@@ -85,15 +85,22 @@ rebuild everything from the EDF files.
 
 ### A. From raw EEG to the feature tables
 
+The steps share three modules in `scripts/` (nothing to run, the scripts import them):
+`eeg_preprocessing.py` (loading, bad channels, 2–20 Hz, average reference, epochs, rejection),
+`microstate_model.py` (GFP, peak sampling, modified k-means, labelling, A–D names) and
+`microstate_features.py` (the duration / occurrence / coverage / transition formulas, written out).
+
 | # | Script | What it does | Writes |
 |---|---|---|---|
 | 1 | `check_bad_channels.py` | lists flat / noisy channels per subject (prints only) | — |
 | 2 | `tune_microstates_v3.py` | fits ONE shared 4-state microstate model for all 28 subjects (no labels used) | `shared_microstate_model_v3.pkl`, `v3_maps_k4.png` |
 | 3 | `name_states.py` | suggests which state is A, B, C, D by map shape (prints only) | — |
+| 3b | `gev_by_k.py` | GEV for k = 2–8 maps on the same peaks as the final model (does not change it) | `gev_by_k.csv`, `gev_by_k.png` |
 | 4 | `check_map_stability.py` | re-fits with other seeds / 4 subjects left out; maps stay stable (prints only) | — |
 | 5 | `extract_epoch_features.py` | 5-s epochs, first 15 min, rejects outlier epochs, 24 features per epoch and per subject | `eeg_epoch_features_15min.csv`, `eeg_features_epoch_mean_15min.csv`, `..._sd_15min.csv`, `epoch_rejection_report_15min.csv` |
 | 6 | `make_final_features.py` | drops 8 redundant columns WITHOUT using labels: 24 → 16 features | `features_final_16.csv`, `features_final_16_no_s14.csv`, `features_final_16_list.txt` |
 | 7 | `plot_labelled_maps.py` | the four maps with their A–D names | `maps_labelled_ABCD.png` |
+| 7b | `plot_transition_matrix.py` | the 12 transition probabilities as 4×4 heatmaps (controls, patients, difference) | `transition_matrix_heatmap.png` |
 | 8 | `make_epoch_array.py` | the kept raw epochs as one array (same 4,786 epochs as step 5) | `epochs_15min.npz` |
 | 9 | `make_epoch_array.py --preset labram` | the same epochs, 0.1–75 Hz, 50 Hz notch, 200 Hz, for LaBraM | `epochs_15min_labram.npz` |
 
@@ -103,6 +110,7 @@ rebuild everything from the EDF files.
 |---|---|---|---|
 | 10 | `evaluate.py` | the shared scoring function (leave-one-subject-out, 95% CI) + a logistic-regression baseline | seconds |
 | 11 | `labs\lab09_a3_classifiers.py` | **1**: 11 classifiers on the 16 features | 3 min |
+| 11b | `baseline_24_vs_16.py` | baseline check: the same 11 classifiers on all 24 features, then the 16 | 5 min |
 | 12 | `item2_embeddings.py` | **2**: frozen LaBraM embeddings + classifiers (needs step 9) | 2 min |
 | 13 | `item3_finetune.py` | **3**: fine-tuned LaBraM, 7-fold subject-grouped (needs step 9; resumes if stopped) | about 1 hour |
 | 14 | `item4_feature_reduction.py` | **4**: 24 vs 16 vs top-k vs L1 selection | 1 min |

@@ -18,6 +18,10 @@ the model memorised its training subjects; it is shown for that reason only.
 | 6 | Comparison with published results on the same dataset, + what to copy / do differently | `item6_comparison.md` (read this), `item6_comparison.csv` | `scripts/item6_comparison.py` |
 | 7 | Clustering vs diagnosis | `item7_clustering.csv`, `item7_contingency_tables.csv`, `item7_kmeans_pca.png` | `scripts/item7_clustering.py` |
 
+Baseline check (24 vs 16 features, 11 classifiers): `baseline_24_vs_16.csv`, made by `scripts/baseline_24_vs_16.py`.
+Transition heatmap: `outputs/transition_matrix_heatmap.png` (`scripts/plot_transition_matrix.py`).
+Why 4 maps: GEV for k = 2–8 in `outputs/gev_by_k.csv` / `.png` (`scripts/gev_by_k.py`); k = 4 gives 67.4%.
+
 Related: the permutation test (is a result better than chance?) is in `outputs/permutation/`.
 PCA (Lab 10 A3, part of item 4) is in `outputs/labs/lab10_a3_pca.csv`.
 
