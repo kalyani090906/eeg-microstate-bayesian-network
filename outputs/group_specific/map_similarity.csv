@@ -1,0 +1,9 @@
+group,letter,abs_corr_with_shared_map,group_GEV
+HC,D,0.997,0.702
+HC,C,0.998,0.702
+HC,A,0.998,0.702
+HC,B,0.99,0.702
+SZ,C,0.992,0.661
+SZ,A,0.942,0.661
+SZ,D,0.98,0.661
+SZ,B,0.916,0.661
