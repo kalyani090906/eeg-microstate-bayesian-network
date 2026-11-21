@@ -92,6 +92,21 @@ function readCsv(file) {
   return lines.slice(1).map(l => { const v = parse(l), o = {}; head.forEach((h, i) => o[h] = v[i]); return o; });
 }
 
+function peakTables() {
+  const rows = readCsv(path.join(HERE, "numbers_per_subject.csv"));
+  [["h", "controls"], ["s", "patients"]].forEach(([g, word]) => {
+    const part = rows.filter(r => r.subject.startsWith(g));
+    table(`Every person's numbers (${word})`, [
+      ["Person", "Recording (min)", "Samples used (first 15 min)", "GFP peaks (whole, filtered)", "Peaks per s (filtered)", "ms between peaks", "Peaks per s (unfiltered)", "After 5% cut", "Used for the maps"],
+      ...part.map(r => [r.subject, Number(r.minutes_whole).toFixed(1), Number(r.gfp_values_first_15min).toLocaleString("en-US"),
+        Number(r.peaks_whole_filtered).toLocaleString("en-US"), Number(r.peaks_per_sec_filtered).toFixed(1),
+        Number(r.ms_between_peaks_filtered).toFixed(0), Number(r.peaks_per_sec_unfiltered).toFixed(1),
+        Number(r.peaks_after_dropping_top5pct).toLocaleString("en-US"), r.peaks_used_for_maps]),
+    ], { colW: [0.9, 1.3, 1.6, 1.6, 1.3, 1.2, 1.4, 1.4, 1.4], rowH: 0.3, fs: 12,
+      note: "From numbers_per_subject.csv (make_pipeline_figures.py). Recordings shorter than 15 min use what they have (e.g. s06: 12.3 min). Everybody gives exactly 1,500 peaks to the maps, whatever the length: s14 has 48,365 peaks from 36 min and still gives 1,500.", noteY: 6.3 });
+  });
+}
+
 function foldTables(run) {
   const rows = readCsv(path.join(HERE, `fold_by_fold_${run.replace(" ", "_")}.csv`));
   const others = rows.length - 1;
@@ -419,6 +434,15 @@ tf("What '19 x 225,000' means", [
 ], path.join(F, "data_matrix.png"), { textW: 4.6,
   qa: ["Is it 19 x 225,000 or 225,000 x 19?", "The same data. MNE stores channels x samples (19 rows); clustering treats each map as a row (225,000 x 19)."] });
 
+tf("One column = 19 numbers = one map", [
+  "Left: the 19 voltages at one GFP peak of h01, one bar per electrode (red = positive, blue = negative)",
+  "Right: the **same 19 numbers** drawn on the head: that is a scalp map",
+  "Here O1 and O2 (back) are strongly negative, Fp1/Fp2/F7/F3 (front) positive: a front-back pattern (like map C)",
+  "Clustering compares these 19-number patterns; the head picture is only a way to look at them",
+], path.join(F, "pipeline_fig3_one_map.png"), { stack: true, textH: 1.5 });
+
+peakTables();
+
 tf("Why we do not cluster all 225,000 maps", [
   "Most samples have a **weak** map (low GFP): the pattern is passing through zero or changing, so it is mostly noise",
   "At **GFP peaks** the map is strongest and clearest (Module 5): about 21 per second in our data",
@@ -527,6 +551,11 @@ tf("Step 4: band-pass filter 2-20 Hz", [
   caption: "x = frequency (Hz), y = power (log scale). Outside the shaded band the power drops.",
   qa: ["What is on the axes of this plot?", "x = frequency in Hz; y = power, how much of the signal is at that frequency (log scale)."] });
 
+tf("The filter on one electrode (Cz, h01, 2 seconds)", [
+  "Grey = before the filter, black = after 2-20 Hz: the fast jagged bits (above 20 Hz) are gone, the 10 Hz rhythm stays",
+  "500 samples in 2 s: one every 4 ms. Same time, same electrode; only the frequencies outside 2-20 Hz were removed",
+], path.join(F, "pipeline_fig1_filter.png"), { stack: true, textH: 1.0 });
+
 tf("What cleaning does to the signal (same 3 s of h01)", [
   "Left: as recorded. Right: after 2-20 Hz and average reference",
   "Slow wandering and sharp noise are gone; the rhythm stays",
@@ -610,6 +639,13 @@ tf("Toy Part 5: the same on 2 s of real EEG (h01)", [
 tf("Topomaps at the real peaks", [
   "Several peaks in a row share one pattern (one microstate), sometimes with flipped colours; then the pattern changes",
 ], path.join(F, "toy_8.png"), { stack: true, textH: 0.7 });
+
+tf("GFP peaks on real EEG, before and after the filter", [
+  "Every grey dot is one sample (4 ms apart); red dots are the GFP peaks (find_peaks, at least 2 samples apart)",
+  "**Before filtering** the GFP is jagged: small bumps count as peaks. All subjects: about **45 peaks per second**, about 21 ms apart",
+  "**After 2-20 Hz** the GFP is a row of smooth hills: about **21 peaks per second**, about 44 ms apart (two per alpha cycle)",
+  "So filtering first is what makes the peaks meaningful: each peak is the top of a real hill, not noise",
+], path.join(F, "pipeline_fig2_gfp.png"), { textW: 4.6 });
 
 tf("From all peaks to 1,500 per person (sample_gfp_peaks)", [
   "h01 has **20,481** GFP peaks in 925 s",
@@ -770,6 +806,12 @@ tf("How the smoothing works (Pascual-Marqui et al. 1995, inside pycrostates)", [
   "Effect: a sample keeps a lone label only if that map fits clearly better; if two maps fit almost equally, the neighbours decide",
   "Code: model.predict(epoch, factor=5, half_window_size=5, reject_edges=True) in microstate_model.label_epoch",
 ], null, { qa: ["Doesn't smoothing invent data?", "No: it only chooses between maps that fit almost equally well. It removes one-sample flickers that are noise, not changes of state."] });
+
+tf("1 second of labels becomes segments", [
+  "The black line is GFP; the background colour is the map each sample was given (after smoothing)",
+  "In this 1 second there are **21 segments**: D B D A D C A D C B D C D C D A D C A D A",
+  "Each segment = one visit to a state. Its length gives the **duration**, the number of visits the **occurrence**, the time share the **coverage**, and the order (D -> B -> D -> A ...) the **transitions**",
+], path.join(F, "pipeline_fig4_labels.png"), { stack: true, textH: 1.4 });
 
 tf("Segments and the 3 state features (microstate_features.py)", [
   "**Segment** = run of the same state: A A A B B C C C C -> (A, 3 samples), (B, 2), (C, 4)",

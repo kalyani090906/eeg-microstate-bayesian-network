@@ -29,6 +29,7 @@ rebuilt and checked.
 | File | What it is |
 |---|---|
 | `make_walkthrough_figures.py` | the explainer figures in `figures/` (raw vs clean, spectrum, epoch rejection, GFP peaks, labelling one sample / one epoch, polarity, maps with electrode names) and copies the toy-notebook pictures |
+| `make_pipeline_figures.py` | the four `figures/pipeline_fig*.png` (filter on one electrode, GFP peaks before/after filtering, one peak = 19 numbers = one map, 1 second of labels -> segments) and `numbers_per_subject.csv` (recording length, GFP peaks, peaks per second for every person) |
 | `make_fold_and_matrix_numbers.py` | the train/test split fold by fold (`fold_by_fold_*.csv`), the matrix counts for h01 (`matrix_numbers_h01.csv`) and the matrix picture (`figures/data_matrix.png`) |
 | `build_walkthrough_deck.js` | writes the .pptx from the figures and the project outputs, to `../../reports/project_walkthrough/` (outside the repo) |
 | `figures/` | the pictures used in the deck (project figures are read from `../outputs/`) |
@@ -39,6 +40,7 @@ From the `MLproject` folder (the Python scripts need `dataset/` and the files in
 
 ```powershell
 eeg_env\Scripts\python.exe project_walkthrough\make_walkthrough_figures.py
+eeg_env\Scripts\python.exe project_walkthrough\make_pipeline_figures.py
 eeg_env\Scripts\python.exe project_walkthrough\make_fold_and_matrix_numbers.py
 ```
 
