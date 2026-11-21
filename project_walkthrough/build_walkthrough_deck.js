@@ -242,7 +242,7 @@ table("Which file does which step", [
   ["Step", "Module files (imported, never run)", "Scripts you run", "Writes"],
   ["Clean + epochs", "eeg_preprocessing.py", "check_bad_channels.py", "printed table"],
   ["GFP, maps, labels", "microstate_model.py", "tune_microstates_v3.py, gev_by_k.py, check_map_stability.py, name_states.py", "shared_microstate_model_v3.pkl, gev_by_k.csv"],
-  ["Features", "microstate_features.py", "extract_epoch_features.py, make_final_features.py", "eeg_features_epoch_mean_15min.csv, features_final_16.csv"],
+  ["Features", "microstate_features.py", "extract_epoch_features.py, make_final_features.py, check_features_match.py", "eeg_features_epoch_mean_15min.csv, features_final_16.csv"],
   ["Raw epochs", "eeg_preprocessing.py", "make_epoch_array.py", "epochs_15min.npz (420 MB, not in git)"],
   ["Group statistics", "-", "ranksum_group_test.py, group_specific_analysis.py, make_kim_style_tables.py", "outputs/group_specific/"],
   ["Scoring", "evaluate.py", "labs/lab09_a3_classifiers.py, item4_..., item7_...", "outputs/items/"],
@@ -258,7 +258,7 @@ table("The three core modules and their functions", [
   ["microstate_model.py", "GFP, peak sampling, modified k-means fit, save/load, labelling with smoothing, A-D names", "global_field_power, sample_gfp_peaks, fit_shared_model, save_model, load_model, suggest_state_names, label_epoch, STATE_NAMES"],
   ["microstate_features.py", "the feature formulas, written out line by line", "segments, state_parameters, transition_counts, transition_probabilities, epoch_features, subject_features, feature_names"],
 ], { colW: [2.8, 4.3, 5.0], rowH: 0.75, fs: 13,
-  note: "Each step and formula is defined **once**, and every pipeline script imports these modules. microstate_features.py gives the same numbers as the pycrostates library (checked on 360 real epochs, equal to 17 decimal places).", noteY: 4.6 });
+  note: "Each step and formula is defined **once**, and every pipeline script imports these modules. microstate_features.py gives the same numbers as the pycrostates library: scripts/check_features_match.py compares them on 345 real epochs (h01 and s01); the largest difference is 6e-17, i.e. identical.", noteY: 4.6 });
 
 tf("How to set up and run the project", [
   "Windows, PowerShell, Python 3.13. From the MLproject folder:",
@@ -389,6 +389,7 @@ tf("Subject s14 is unusual: our rule for it", [
   "- use the **first 15 minutes** (180 epochs) for everybody",
   "- report every result **with s14** (28 people, main) and **without s14** (27 people)",
   "Results that hold only with s14 are weaker evidence",
+  "Note: the GFP peaks that **fit the maps** still come from each **whole** recording (for s14 all 36 min); only the features use the first 15 min (Module 3)",
 ], path.join(P, "inspect_s14.png"), { textW: 5.4,
   qa: ["Why not just delete s14?", "Deleting a patient because of their data could look like cherry-picking. Showing both is honest."] });
 
@@ -505,6 +506,16 @@ tf("Step 3: find and repair broken electrodes", [
   "**interpolate_bads** (spherical spline) rebuilds each one from the others using the head geometry",
 ], null, { qa: ["Why not just delete the bad channel?", "Every person must have the same 19 channels, because all are described with the same 4 maps of 19 values."],
   notes: "A bad electrode is like a broken microphone in a choir recording. We can estimate what it should have recorded from the microphones around it. That is interpolation." });
+
+tf("How a broken electrode is rebuilt: spherical-spline interpolation", [
+  "MNE: raw.interpolate_bads(), method of Perrin et al. (1989)",
+  "1. The electrodes are placed on a sphere fitted to the head (their 10-20 positions)",
+  "2. The bad electrode's own signal is thrown away",
+  "3. At every sample, a **smooth surface** is fitted through the voltages of the 18 good electrodes; the 'spline' is the smoothest surface that passes through them",
+  "4. The bad electrode gets the value of that surface **at its own position**",
+  "In practice: a weighted sum of the good electrodes; weights depend on the angle between electrodes on the sphere (a Legendre-polynomial series), so near neighbours count most",
+  "Only one channel per affected person (s07 C4, h14 F7, s11 F7, s12 P7), so 18 real electrodes always remain",
+], null, { qa: ["Is the rebuilt channel real data?", "No: it is estimated from its neighbours. That is acceptable for one channel out of 19, because neighbouring electrodes record very similar signals."] });
 
 tf("Step 4: band-pass filter 2-20 Hz", [
   "Keeps only rhythms between **2 and 20 Hz** (cycles per second)",
@@ -749,6 +760,17 @@ tf("Labelling a whole epoch: backfitting + smoothing", [
   "reject_edges=True: the first and last segment become -1 (grey), as their true length is unknown",
 ], path.join(F, "backfitting_epoch.png"), { stack: true, textH: 1.45 });
 
+tf("How the smoothing works (Pascual-Marqui et al. 1995, inside pycrostates)", [
+  "For every sample t and every map k, a **cost**:",
+  "- cost(k, t) = misfit(k, t) - b x N_k(t)",
+  "- misfit = how badly map k explains the 19 values at t: (|V_t|^2 - (map_k . V_t)^2) / (2 e (19 - 1)), with e = the average leftover noise",
+  "- N_k(t) = how many samples in the window t-5 ... t+5 (11 samples = 44 ms) currently have label k",
+  "- b = smoothing factor = **5**: each neighbour with the same label is a discount",
+  "Each sample takes the map with the **lowest cost**; the window counts change, so this is **repeated** until the total misfit stops changing (tolerance 1e-5)",
+  "Effect: a sample keeps a lone label only if that map fits clearly better; if two maps fit almost equally, the neighbours decide",
+  "Code: model.predict(epoch, factor=5, half_window_size=5, reject_edges=True) in microstate_model.label_epoch",
+], null, { qa: ["Doesn't smoothing invent data?", "No: it only chooses between maps that fit almost equally well. It removes one-sample flickers that are noise, not changes of state."] });
+
 tf("Segments and the 3 state features (microstate_features.py)", [
   "**Segment** = run of the same state: A A A B B C C C C -> (A, 3 samples), (B, 2), (C, 4)",
   "fs = 250 Hz; L = labelled samples in the epoch (edges excluded); n_k = number of segments of state k; l_kj = length of its j-th segment",
@@ -756,7 +778,7 @@ tf("Segments and the 3 state features (microstate_features.py)", [
   "- **Occurrence_k** = n_k / (L / fs): visits per second",
   "- **Coverage_k** = sum_j l_kj / L: share of the time (0 to 1)",
   "So **Coverage = Occurrence x Duration**, exactly, within an epoch",
-  "Same definitions as pycrostates 0.6.1 and as Keihani et al. (Table 1)",
+  "Same definitions as pycrostates 0.6.1 (checked: scripts/check_features_match.py, 345 epochs, identical) and as Keihani et al. (Table 1)",
   "Per person: mean over the kept epochs; an epoch where a state never appears is skipped for its duration (its occurrence and coverage count as 0)",
 ], null, { qa: ["Typical values in our data?", "Means over the 28 people: duration 63-69 ms, occurrence 3.6-4.2 per s, coverage 22-28% per state. Keihani et al. report 56-80 ms on the same data."] });
 
@@ -926,6 +948,18 @@ table("What evaluate() reports", [
   ["overfit_gap", "train minus test: large = the model memorised its training people (only a warning, never the result)"],
 ], { colW: [3.0, 9.1], rowH: 0.48, fs: 14,
   qa: ["Why is the confidence interval so wide?", "With 28 people, one person = 3.6 points. The data cannot pin the accuracy down more precisely."] });
+
+tf("How AUC and the 95% confidence interval are computed", [
+  "**AUC** (area under the ROC curve) = the chance that a randomly chosen patient gets a **higher** P(patient) than a randomly chosen control",
+  "- with 14 + 14 people there are 14 x 14 = 196 patient-control pairs; count the pairs ordered correctly (ties count 1/2) and divide by 196",
+  "- 1.0 = every patient above every control; 0.5 = random order; 0.24 (the LSTM) = mostly the wrong way round",
+  "- AUC uses the probabilities, not the 0.5 cut-off: it can be good even when accuracy is not, and the other way round",
+  "**95% CI** (Wilson method), with p = accuracy, n = number of people, z = 1.96:",
+  "- centre = (p + z^2/2n) / (1 + z^2/n); half-width = z x sqrt( p(1-p)/n + z^2/4n^2 ) / (1 + z^2/n)",
+  "- example: 23 of 28 correct, p = 0.821 -> **64.4% to 92.1%**",
+  "- Wilson instead of 'p +/- 1.96 x SE' because it behaves well with small n and never goes below 0 or above 1",
+  "Code: evaluate.wilson_ci; AUC from sklearn.metrics.roc_auc_score",
+], null);
 
 tf("Why some accuracies fall below 50%", [
   "With 14 vs 14: hold out a control -> training has **13 controls, 14 patients** -> a weak model leans towards 'patient' -> the held-out control is called a patient",
@@ -1183,6 +1217,17 @@ tf("LaBraM: a pretrained EEG model", [
   "No microstates involved: it is a different route from the raw EEG",
 ], null, { qa: ["Why a pretrained model?", "28 people are far too few to train a deep network from scratch. A model trained on lots of other EEG can be reused."] });
 
+tf("Inside LaBraM: from an epoch to 200 numbers", [
+  "1. Our 5-s epoch, 19 channels, at 200 Hz = 19 x 1,000 samples",
+  "2. Each channel is cut into **1-second patches** (200 samples): 19 x 5 = **95 patches**",
+  "3. A small convolutional encoder turns every patch into a **token** (a vector of 200 numbers)",
+  "4. Two learned 'labels' are added to each token: **which electrode** (spatial embedding) and **which second** (temporal embedding)",
+  "5. A **transformer** with 12 layers lets every token look at every other token (attention), across channels and time",
+  "6. Our embedding = the **average of the 95 output tokens** = 200 numbers per epoch",
+  "Pretraining (done by the authors, not us): parts of the EEG were hidden and the model learned to predict them ('masked EEG modelling'), on about 2,500 hours of EEG",
+  "Item 2 uses steps 1-6 frozen; item 3 retrains the last 2 of the 12 layers + a classification head",
+], null, { qa: ["What do the 200 numbers mean?", "Nothing a person can name: they are a learned summary of the epoch. We only check whether a classifier can use them."] });
+
 table("Item 2: frozen embeddings + classifiers (LOSO)", [
   ["How", "Classifier", "With s14", "Without s14", "AUC (with)"],
   ["epoch level (train on all epochs, average per person)", "Logistic regression", "75.0%", "74.1%", "0.89"],
@@ -1362,6 +1407,7 @@ tf("Limitations and future work", [
   "- 28 people: wide confidence intervals; results move by 1-4 people with tiny changes (instability)",
   "- s14 strongly affects the main result",
   "- names C and D are the least certain",
+  "- the GFP peaks that fit the maps come from each whole recording (s14: all 36 min, including after its change at 18 min), while the features use the first 15 min. No labels are involved, but it is cleaner to take the peaks from the same 15 min",
   "- the LSTM on the sequences did not learn anything usable (at chance, same as shuffled order)",
   "- no clinical information (medication, age) used",
   "**Future work** (with the faculty, semester break)",
