@@ -1,0 +1,14 @@
+step,shape,numbers,note
+raw recording,"19 x 231,250","4,393,750",925 s at 250 Hz
+after cleaning,"19 x 231,250","4,393,750","same shape, values changed"
+epochs (first 15 min),"180 x 19 x 1,250","4,275,000","225,000 samples used"
+kept epochs,"180 x 19 x 1,250","4,275,000",0 rejected
+GFP curve,"1 x 231,250","231,250",19 numbers -> 1 per sample
+GFP peaks,"20,481 x 19","389,139",whole recording
+after dropping loudest 5%,"19,457 x 19","369,683",
+random sample for fitting,"1,500 x 19","28,500",seed 42
+labels of kept epochs,"180 x 1,250","225,000","216,525 labelled (edges -1)"
+segments,"11,587",,mean 64.4 per epoch
+transitions counted,"11,407",,pooled for the 12 probabilities
+features per epoch,180 x 24,"4,320",
+features per person,1 x 24 -> 1 x 16,16,mean over epochs; 8 redundant dropped

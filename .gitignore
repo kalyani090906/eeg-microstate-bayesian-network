@@ -22,3 +22,9 @@ outputs/nested_loso/folds/
 outputs/nested_loso/*.npz
 # run logs
 outputs/*_run_log.txt
+
+# project walkthrough: node packages for rebuilding it, and PowerPoint lock files
+project_walkthrough/node_modules/
+project_walkthrough/package*.json
+~$*
+project_walkthrough/*.pptx

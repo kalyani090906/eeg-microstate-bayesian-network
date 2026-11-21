@@ -1,0 +1,28 @@
+test_subject,true,train_HC,train_SC,train_accuracy,features_kept,P_patient,predicted,correct
+h01,HC,13,13,0.731,"C dur, A->B",0.201,HC,True
+h02,HC,13,13,0.885,"C dur, A->B",0.527,SC,False
+h03,HC,13,13,0.808,"C dur, A->B",0.115,HC,True
+h04,HC,13,13,0.846,"D dur, C dur, A->B",0.304,HC,True
+h05,HC,13,13,0.769,"C dur, A->B",0.476,HC,True
+h06,HC,13,13,0.769,"C dur, A->B",0.488,HC,True
+h07,HC,13,13,0.846,"D dur, C dur, A->B",0.53,SC,False
+h08,HC,13,13,0.846,"C dur, A->B, B->D",0.775,SC,False
+h09,HC,13,13,0.769,"C dur, A->B",0.413,HC,True
+h10,HC,13,13,0.808,"C dur, A->B",0.591,SC,False
+h11,HC,13,13,0.769,"C dur, A->B",0.106,HC,True
+h12,HC,13,13,0.885,"C dur, A->B",0.0,HC,True
+h13,HC,13,13,0.846,"D dur, C dur, A->B",0.462,HC,True
+h14,HC,13,13,0.769,"C dur, A->B",0.272,HC,True
+s01,SC,14,12,0.769,"C dur, A->B",0.524,SC,True
+s02,SC,14,12,0.846,"C dur, A->B",0.707,SC,True
+s03,SC,14,12,0.846,"D dur, C dur, A->B",0.485,HC,False
+s04,SC,14,12,0.885,"C dur, A->B",0.424,HC,False
+s05,SC,14,12,0.769,"C dur, A->B",0.841,SC,True
+s06,SC,14,12,0.846,"D dur, C dur, A->B",0.635,SC,True
+s07,SC,14,12,0.885,"D dur, C dur, A->B",0.941,SC,True
+s08,SC,14,12,0.769,"C dur, A->B",0.688,SC,True
+s09,SC,14,12,0.769,"C dur, A->B",0.656,SC,True
+s10,SC,14,12,0.846,"C dur, A->B",0.365,HC,False
+s11,SC,14,12,0.885,"D dur, C dur, A->B",0.152,HC,False
+s12,SC,14,12,0.846,"D dur, C dur, A->B",0.939,SC,True
+s13,SC,14,12,0.885,"C dur, A->B",0.279,HC,False
