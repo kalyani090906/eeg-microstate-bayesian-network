@@ -1,0 +1,49 @@
+table,model,maps,n_subjects,n_correct,accuracy,ci_low,ci_high,train_accuracy,overfit_gap,balanced_accuracy,precision,recall,f1,auc
+with s14,Logistic regression,main maps (all subjects),28,19,0.6786,0.4934,0.8207,0.881,0.2024,0.6786,0.6667,0.7143,0.6897,0.7092
+with s14,Logistic regression,maps refitted in each fold,28,19,0.6786,0.4934,0.8207,0.8717,0.1931,0.6786,0.6667,0.7143,0.6897,0.7398
+with s14,SVM (linear),main maps (all subjects),28,18,0.6429,0.4583,0.7929,0.8545,0.2116,0.6429,0.6429,0.6429,0.6429,0.602
+with s14,SVM (linear),maps refitted in each fold,28,18,0.6429,0.4583,0.7929,0.8902,0.2474,0.6429,0.6429,0.6429,0.6429,0.6582
+with s14,SVM (RBF),main maps (all subjects),28,19,0.6786,0.4934,0.8207,0.918,0.2394,0.6786,0.6667,0.7143,0.6897,0.6939
+with s14,SVM (RBF),maps refitted in each fold,28,20,0.7143,0.5294,0.8475,0.8624,0.1481,0.7143,0.6875,0.7857,0.7333,0.7296
+with s14,Decision tree,main maps (all subjects),28,14,0.5,0.3263,0.6737,0.959,0.459,0.5,0.5,0.4286,0.4615,0.5714
+with s14,Decision tree,maps refitted in each fold,28,14,0.5,0.3263,0.6737,0.9656,0.4656,0.5,0.5,0.5,0.5,0.5204
+with s14,Random forest,main maps (all subjects),28,18,0.6429,0.4583,0.7929,1.0,0.3571,0.6429,0.6429,0.6429,0.6429,0.6582
+with s14,Random forest,maps refitted in each fold,28,18,0.6429,0.4583,0.7929,1.0,0.3571,0.6429,0.6429,0.6429,0.6429,0.699
+with s14,AdaBoost,main maps (all subjects),28,22,0.7857,0.6046,0.8979,1.0,0.2143,0.7857,0.7857,0.7857,0.7857,0.7806
+with s14,AdaBoost,maps refitted in each fold,28,20,0.7143,0.5294,0.8475,1.0,0.2857,0.7143,0.7143,0.7143,0.7143,0.7194
+with s14,XGBoost,main maps (all subjects),28,16,0.5714,0.3907,0.7349,1.0,0.4286,0.5714,0.5833,0.5,0.5385,0.5816
+with s14,XGBoost,maps refitted in each fold,28,17,0.6071,0.4241,0.7643,1.0,0.3929,0.6071,0.6,0.6429,0.6207,0.6939
+with s14,CatBoost,main maps (all subjects),28,17,0.6071,0.4241,0.7643,1.0,0.3929,0.6071,0.6154,0.5714,0.5926,0.6224
+with s14,CatBoost,maps refitted in each fold,28,18,0.6429,0.4583,0.7929,1.0,0.3571,0.6429,0.625,0.7143,0.6667,0.6888
+with s14,Naive Bayes,main maps (all subjects),28,17,0.6071,0.4241,0.7643,0.7275,0.1204,0.6071,0.6,0.6429,0.6207,0.5765
+with s14,Naive Bayes,maps refitted in each fold,28,14,0.5,0.3263,0.6737,0.6283,0.1283,0.5,0.5,0.7857,0.6111,0.6633
+with s14,kNN (k=5),main maps (all subjects),28,19,0.6786,0.4934,0.8207,0.7897,0.1111,0.6786,0.6667,0.7143,0.6897,0.6658
+with s14,kNN (k=5),maps refitted in each fold,28,21,0.75,0.5664,0.8732,0.8373,0.0873,0.75,0.7692,0.7143,0.7407,0.7679
+with s14,MLP,main maps (all subjects),28,14,0.5,0.3263,0.6737,1.0,0.5,0.5,0.5,0.5714,0.5333,0.5612
+with s14,MLP,maps refitted in each fold,28,20,0.7143,0.5294,0.8475,1.0,0.2857,0.7143,0.6875,0.7857,0.7333,0.7755
+with s14,L1 selection + logistic regression,main maps (all subjects),28,22,0.7857,0.6046,0.8979,0.8479,0.0622,0.7857,0.8333,0.7143,0.7692,0.7959
+with s14,L1 selection + logistic regression,maps refitted in each fold,28,23,0.8214,0.6441,0.9212,0.8519,0.0304,0.8214,0.8462,0.7857,0.8148,0.852
+without s14,Logistic regression,main maps (all subjects),27,16,0.5926,0.4073,0.7549,0.8846,0.292,0.5907,0.5833,0.5385,0.56,0.6758
+without s14,Logistic regression,maps refitted in each fold,27,17,0.6296,0.4423,0.7847,0.8761,0.2464,0.6291,0.6154,0.6154,0.6154,0.7253
+without s14,SVM (linear),main maps (all subjects),27,17,0.6296,0.4423,0.7847,0.8519,0.2222,0.6291,0.6154,0.6154,0.6154,0.5824
+without s14,SVM (linear),maps refitted in each fold,27,15,0.5556,0.3731,0.7241,0.9103,0.3547,0.5522,0.5455,0.4615,0.5,0.6209
+without s14,SVM (RBF),main maps (all subjects),27,18,0.6667,0.4782,0.8136,0.916,0.2493,0.6676,0.6429,0.6923,0.6667,0.6813
+without s14,SVM (RBF),maps refitted in each fold,27,21,0.7778,0.5924,0.8939,0.8561,0.0783,0.7775,0.7692,0.7692,0.7692,0.7088
+without s14,Decision tree,main maps (all subjects),27,11,0.4074,0.2451,0.5927,0.9558,0.5484,0.4066,0.3846,0.3846,0.3846,0.467
+without s14,Decision tree,maps refitted in each fold,27,12,0.4444,0.2759,0.6269,0.953,0.5085,0.4451,0.4286,0.4615,0.4444,0.4973
+without s14,Random forest,main maps (all subjects),27,16,0.5926,0.4073,0.7549,1.0,0.4074,0.5907,0.5833,0.5385,0.56,0.6236
+without s14,Random forest,maps refitted in each fold,27,15,0.5556,0.3731,0.7241,1.0,0.4444,0.5577,0.5333,0.6154,0.5714,0.6346
+without s14,AdaBoost,main maps (all subjects),27,19,0.7037,0.5152,0.8415,1.0,0.2963,0.7005,0.7273,0.6154,0.6667,0.7143
+without s14,AdaBoost,maps refitted in each fold,27,16,0.5926,0.4073,0.7549,1.0,0.4074,0.5934,0.5714,0.6154,0.5926,0.6648
+without s14,XGBoost,main maps (all subjects),27,14,0.5185,0.3399,0.6926,1.0,0.4815,0.5165,0.5,0.4615,0.48,0.5495
+without s14,XGBoost,maps refitted in each fold,27,13,0.4815,0.3074,0.6601,1.0,0.5185,0.4808,0.4615,0.4615,0.4615,0.5549
+without s14,CatBoost,main maps (all subjects),27,16,0.5926,0.4073,0.7549,1.0,0.4074,0.5907,0.5833,0.5385,0.56,0.5879
+without s14,CatBoost,maps refitted in each fold,27,16,0.5926,0.4073,0.7549,1.0,0.4074,0.5962,0.5625,0.6923,0.6207,0.6264
+without s14,Naive Bayes,main maps (all subjects),27,15,0.5556,0.3731,0.7241,0.7279,0.1724,0.5549,0.5385,0.5385,0.5385,0.5549
+without s14,Naive Bayes,maps refitted in each fold,27,14,0.5185,0.3399,0.6926,0.5897,0.0712,0.5302,0.5,0.8462,0.6286,0.6209
+without s14,kNN (k=5),main maps (all subjects),27,18,0.6667,0.4782,0.8136,0.7821,0.1154,0.6676,0.6429,0.6923,0.6667,0.6429
+without s14,kNN (k=5),maps refitted in each fold,27,18,0.6667,0.4782,0.8136,0.8462,0.1795,0.6648,0.6667,0.6154,0.64,0.706
+without s14,MLP,main maps (all subjects),27,14,0.5185,0.3399,0.6926,1.0,0.4815,0.5165,0.5,0.4615,0.48,0.5824
+without s14,MLP,maps refitted in each fold,27,20,0.7407,0.5532,0.8683,1.0,0.2593,0.7418,0.7143,0.7692,0.7407,0.7802
+without s14,L1 selection + logistic regression,main maps (all subjects),27,22,0.8148,0.633,0.9182,0.8405,0.0256,0.8104,0.9,0.6923,0.7826,0.7857
+without s14,L1 selection + logistic regression,maps refitted in each fold,27,18,0.6667,0.4782,0.8136,0.8219,0.1553,0.6648,0.6667,0.6154,0.64,0.7363

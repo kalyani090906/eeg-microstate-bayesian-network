@@ -61,6 +61,10 @@ folder. Every script has its settings in one block at the top and uses seed 42.
 | `outputs/items/` | one file (or folder) per project item, with its own [README](outputs/items/README.md) |
 | `outputs/labs/` | lab results (tables and figures) |
 | `outputs/permutation/` | permutation-test results (is a result better than chance?) |
+| `outputs/group_specific/` | HC and SC analysed separately; rank-sum tests; Kim-style tables |
+| `outputs/nested_loso/` | maps refitted inside every fold: results, per-subject predictions, permutation test |
+| `outputs/lstm/` | LSTM on the microstate sequences (item 8) |
+| `notebooks/` | the toy GFP demo notebook (made by `make_toy_gfp_notebook.py`) |
 | `ml project dump/` | old scripts and superseded tables (**not in git**, kept locally only) |
 
 **Large files not in git** (in `.gitignore`); share them through a drive, or rebuild them with
@@ -120,6 +124,19 @@ The steps share three modules in `scripts/` (nothing to run, the scripts import 
 | 18 | `item6_comparison.py` | **6**: comparison with published results (reads the results above) | seconds |
 | 19 | `collect_items.py` | copies the item 1 and 5 results into `outputs/items/` | seconds |
 
+### D. Added after the faculty review (November 2026)
+
+| # | Script | What it does | Time (CPU) |
+|---|---|---|---|
+| 20 | `group_specific_analysis.py` | maps fitted separately for HC and SC; the 16 features with each group's own maps (group comparison only, never for classification) | 20–30 min |
+| 21 | `ranksum_group_test.py` | Wilcoxon rank-sum test, HC vs SC, per feature (uncorrected and Holm), shared and group maps | seconds |
+| 22 | `make_kim_style_tables.py` | the group comparison in the layout of Kim et al. [9] Table 2 | seconds |
+| 23 | `plot_group_maps_labelled.py` | HC and SC maps with the electrode names | seconds |
+| 24 | `nested_loso_refit_maps.py` | leave-one-subject-out with the 4 maps **refitted inside every fold** (the test subject's EEG is never used before testing); 12 classifiers, main maps vs refitted maps | about 1 hour |
+| 25 | `permutation_test_nested.py` | 1,000 label shuffles on the refitted-map results (needs step 24) | about 1.5 hours |
+| 26 | `item8_lstm_sequences.py` | **8**: LSTM on the microstate sequences, refitted maps, with a shuffled-order control (needs step 24) | about 1 hour |
+| 27 | `notebooks\make_toy_gfp_notebook.py` | writes and runs `notebooks/toy_gfp_demo.ipynb`: GFP, GFP peaks, k-means and labelling on made-up sine-wave signals, then on 2 s of real EEG (for understanding the method; not a result) | 1 min |
+
 ### C. Lab exercises (`labs/`)
 
 Each file is named `labNN_aX_….py` after the lab-sheet question it answers. For example,
@@ -135,7 +152,9 @@ Lab 8 A1–A11 (logic gates, customer table) are separate submissions and are no
 1. **Split by subject.** All epochs of one person stay on the same side of every split,
    bootstrap and permutation.
 2. **Learn from the training part only.** Scaling, feature selection, PCA, binning and tuning
-   are fitted inside each training fold, never on all subjects first.
+   are fitted inside each training fold, never on all subjects first. Since November 2026 the
+   microstate maps are also refitted inside each fold (`nested_loso_refit_maps.py`); these are
+   the main classification results.
 3. **Leave-one-subject-out** (28 folds) unless stated otherwise. Epoch predictions are averaged
    into one prediction per subject, and epoch-level accuracy is never reported.
    The result is always the **test** accuracy. Result tables also give `train_accuracy` (the same
@@ -167,11 +186,18 @@ model explains 67.4% of the signal (GEV 0.674).
 
 | Approach | With s14 | Without s14 | Better than chance? (permutation, corrected) |
 |---|---|---|---|
-| Microstate features, L1 selection + logistic regression | 78.6% | 81.5% | yes (p = 0.033 / 0.014) |
+| **Microstate features, maps refitted in each fold, L1 selection + logistic regression (main)** | **82.1%** | **66.7%** | with s14 yes (p = 0.011); without s14 no (p = 0.153) |
+| Same, AdaBoost | 71.4% | 59.3% | no (p = 0.073 / 0.324) |
+| Same, logistic regression | 67.9% | 63.0% | no (p = 0.124 / 0.232) |
+| Older version: maps fitted once on all 28, L1 selection + logistic regression | 78.6% | 81.5% | yes (p = 0.033 / 0.014) |
+| LSTM on the microstate sequences (item 8, refitted maps) | 35.7% | 48.1% | no: at chance, and no better than shuffled order |
 | Frozen LaBraM embeddings + logistic regression | 75.0% | 74.1% | borderline (p = 0.059 / 0.050) |
 | Fine-tuned LaBraM (7-fold, different protocol) | 71.4% | 77.8% | not tested |
 | Published, same dataset, subject-wise (Kim et al. 2021) | 75.64% | | |
 
-Leave-one-subject-out accuracy unless stated. Higher published numbers on this dataset (90–99%)
+Leave-one-subject-out accuracy unless stated. Permutation p-values are family-wise over the 3
+pre-chosen microstate models (`outputs/nested_loso/permutation_nested_summary.csv`). The fold maps
+match the all-28 maps closely (|r| ≥ 0.996), yet the accuracies move by 1–4 subjects: the results
+are unstable at this sample size, and only the with-s14 L1 result beats chance. Higher published numbers on this dataset (90–99%)
 come from splitting epochs instead of subjects, or from data augmentation. See
 [item 6](outputs/items/item6_comparison.md).

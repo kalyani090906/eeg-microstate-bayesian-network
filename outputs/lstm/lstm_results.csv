@@ -1,0 +1,5 @@
+table,model,input,n_subjects,n_correct,accuracy,ci_low,ci_high,train_accuracy,overfit_gap,balanced_accuracy,precision,recall,f1,auc,mean_epoch_accuracy
+with s14,LSTM on microstate sequences,real order,28,10,0.3571,0.2071,0.5417,0.7037,0.3466,0.3571,0.4091,0.6429,0.5,0.2398,0.3994
+with s14,LSTM on microstate sequences,shuffled order (control),28,10,0.3571,0.2071,0.5417,0.6812,0.3241,0.3571,0.3889,0.5,0.4375,0.2653,0.3865
+without s14,LSTM on microstate sequences,real order,27,13,0.4815,0.3074,0.6601,0.7251,0.2436,0.4835,0.4667,0.5385,0.5,0.3791,0.4446
+without s14,LSTM on microstate sequences,shuffled order (control),27,8,0.2963,0.1585,0.4848,0.6481,0.3519,0.2967,0.2857,0.3077,0.2963,0.1978,0.3851

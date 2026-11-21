@@ -17,3 +17,8 @@ ml project dump/
 
 
 outputs/*.npz
+# per-fold maps and labels, peak cache (large; rebuilt by nested_loso_refit_maps.py)
+outputs/nested_loso/folds/
+outputs/nested_loso/*.npz
+# run logs
+outputs/*_run_log.txt
